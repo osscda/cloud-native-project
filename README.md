@@ -1,4 +1,10 @@
-# Dapr Samples
+# Cloud Native Wednesdays
+
+This is the code from the Cloud Native Wednesdays stream. It is forked and adapted from the [Dapr Samples](https://github.com/dapr/samples) repository.
+
+Thanks very much to the [Dapr](https://dapr.io) team for a great set of samples (and a great project!)
+
+---
 
 [![Build Status](https://github.com/dapr/samples/workflows/samples/badge.svg?event=push&branch=master)](https://github.com/dapr/samples/actions?workflow=samples)
 [![Join the chat at https://gitter.im/Dapr/samples](https://badges.gitter.im/Dapr/samples.svg)](https://gitter.im/Dapr/samples?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
