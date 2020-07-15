@@ -31,44 +31,56 @@ app.get('/orders', (_req, res) => {
         });
 });
 
-app.post('/neworder', (req, res) => {
+app.post('/neworder', async (req, res) => {
     const data = req.body.data;
+    console.log(`data: ${data}`);
     const orderId = data.orderId;
     console.log("Got a new order! Order ID: " + orderId);
 
     const key = "orders";
 
-    fetch(stateUrl + "/orders").then((response) => {
-        if (!response.ok) {
-            throw "Could not get state.";
-        }
-
-        return response.json();
-    }).then((responseJSON) => {
-        const listOfOrderIDs = responseJSON;
+    // MAGICAL PSEUDO FANCY CODE 😊
+    // mything  = 123
+    // myPromiseThing = .... waiting for 123
+    try {
+        const ordersText = await fetch(stateUrl + "/orders");
+        const ordersJSON = await ordersText.json();
+        
+        const listOfOrderIDs = ordersJSON;
         listOfOrderIDs.push(orderId);
         const state = {
             key: "orders",
             value: listOfOrderIDs,
         }
-        fetch(stateUrl, {
+        // we're ready to put the new list back into the state store
+    
+        const saveResponse = await fetch(stateUrl, {
             method: "POST",
             body: JSON.stringify(state),
             headers: {
                 "Content-Type": "application/json"
             }
-        }).then((response) => {
-            if (!response.ok) {
-                throw "Failed to persist state.";
-            }
-    
-            console.log("Successfully persisted state.");
-            res.status(200).send();
-        }).catch((error) => {
-            console.log(error);
-            res.status(500).send({message: error});
         });
-    })
+        res.status(200).send();
+    } catch(e) {
+        console.log(`ERROR! ${e}`);
+    }
+
+    //     }).then((response) => {
+    //         if (!response.ok) {
+    //             throw "Failed to persist state.";
+    //         }
+    
+    //         console.log("Successfully persisted state.");
+    //         res.status(200).send();
+    //     }).catch((error) => {
+    //         console.log(error);
+    //         res.status(500).send({message: error});
+    //     });
+    // }).catch((error) => {
+    //     console.log(error);
+    //     res.status(500).send({message: error});
+    // });
 });
 
 app.delete('/order/:id', (req, res) => {  

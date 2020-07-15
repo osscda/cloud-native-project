@@ -12,5 +12,8 @@
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "isomorphic-fetch": "^2.2.1"
+  },
+  "devDependencies": {
+    "standard": "^14.3.4"
   }
 }
