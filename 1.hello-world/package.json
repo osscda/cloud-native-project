@@ -4,7 +4,8 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "dapr run --app-id nodeapp --app-port 3000 --port 3500 node app.js"
   },
   "author": "",
   "license": "ISC",

@@ -21,7 +21,7 @@ app.get('/orders', (_req, res) => {
             if (!response.ok) {
                 throw "Could not get state.";
             }
-
+            
             return response.text();
         }).then((orders) => {
             res.send(orders);
@@ -33,7 +33,10 @@ app.get('/orders', (_req, res) => {
 
 app.post('/neworder', async (req, res) => {
     const data = req.body.data;
-    console.log(`data: ${data}`);
+    // stringify goes from an object to a string
+    // we had JSON.parse before, and that changes a string
+    // (which is supposed to be JSON) into a JS object
+    console.log(`data: ${JSON.stringify(data)}`);
     const orderId = data.orderId;
     console.log("Got a new order! Order ID: " + orderId);
 
@@ -46,7 +49,12 @@ app.post('/neworder', async (req, res) => {
         const ordersText = await fetch(stateUrl + "/orders");
         const ordersJSON = await ordersText.json();
         
-        const listOfOrderIDs = ordersJSON;
+        let listOfOrderIDs = [];
+        if (ordersJSON.hasOwnProperty('value')) {
+            // hopefully this is a list!
+            listOfOrderIDs = ordersJSON["value"];
+        }
+
         listOfOrderIDs.push(orderId);
         const state = {
             key: "orders",
@@ -112,6 +120,6 @@ app.listen(port, () => {
     //console.log(`DAPR_PORT is ${process.env.DAPR_HTTP_PORT}`);
     console.log(`daprPort is ${daprPort}`);
     
-    console.log(`Node App listening on port ${port}!`);
+    console.log(`Node.js App listening on port ${port}!`);
 });
 
