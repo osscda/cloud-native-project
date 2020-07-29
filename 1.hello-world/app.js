@@ -15,11 +15,21 @@ const stateStoreName = `statestore`;
 const stateUrl = `http://localhost:${daprPort}/v1.0/state/${stateStoreName}`;
 const port = 3000;
 
+const ordersKey = "orders";
+
 app.get('/orders', (_req, res) => {
-    fetch(`${stateUrl}/orders`)
-        .then((response) => {
+    const stateStoreURL = `${stateUrl}/${ordersKey}`;
+    console.log(`state store URL: ${stateStoreURL}`);
+    fetch(`${stateUrl}/${ordersKey}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': "application/json"
+        }
+    }).then((response) => {
+            console.log(`"state store response: ${JSON.stringify(response)}`)
             if (!response.ok) {
-                throw "Could not get state.";
+                return JSON.stringify(response);
+                // throw `Could not get state. Response is ${JSON.stringify(response)}`;
             }
             
             return response.text();
@@ -32,7 +42,9 @@ app.get('/orders', (_req, res) => {
 });
 
 app.post('/neworder', async (req, res) => {
+    console.log("in the neworder endpoint)")
     const data = req.body.data;
+    const dataJSON = JSON.parse(req.body.data);
     // stringify goes from an object to a string
     // we had JSON.parse before, and that changes a string
     // (which is supposed to be JSON) into a JS object
@@ -46,7 +58,7 @@ app.post('/neworder', async (req, res) => {
     // mything  = 123
     // myPromiseThing = .... waiting for 123
     try {
-        const ordersText = await fetch(stateUrl + "/orders");
+        const ordersText = await fetch(stateUrl + "/" + ordersKey);
         const ordersJSON = await ordersText.json();
         
         let listOfOrderIDs = [];
@@ -60,8 +72,7 @@ app.post('/neworder', async (req, res) => {
             key: "orders",
             value: listOfOrderIDs,
         }
-        // we're ready to put the new list back into the state store
-    
+        // we're ready to put the new list back into the state store        
         const saveResponse = await fetch(stateUrl, {
             method: "POST",
             body: JSON.stringify(state),

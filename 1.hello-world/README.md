@@ -211,7 +211,7 @@ In your terminal window, you should see logs indicating that the message was rec
 Now, let's just make sure that our order was successfully persisted to our state store. Create a GET request against: `http://localhost:3500/v1.0/invoke/nodeapp/method/order`. **Note**: Again, be sure to reflect the right port if you chose a port other than 3500.
 
 ```sh
-curl http://localhost:3500/v1.0/invoke/nodeapp/method/order
+curl http://localhost:3500/v1.0/invoke/nodeapp/method/orders
 ```
 
 or using the Visual Studio Code [Rest Client Plugin](https://marketplace.visualstudio.com/items?itemName=humao.rest-client)
