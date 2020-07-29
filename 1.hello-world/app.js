@@ -17,33 +17,33 @@ const port = 3000;
 
 const ordersKey = "orders";
 
-app.get('/orders', (_req, res) => {
+app.get('/orders', async (_req, res) => {
     const stateStoreURL = `${stateUrl}/${ordersKey}`;
     console.log(`state store URL: ${stateStoreURL}`);
-    fetch(`${stateUrl}/${ordersKey}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': "application/json"
-        }
-    }).then((response) => {
-            console.log(`"state store response: ${JSON.stringify(response)}`)
-            if (!response.ok) {
-                return JSON.stringify(response);
-                // throw `Could not get state. Response is ${JSON.stringify(response)}`;
+    try {
+        const ordersResp = await fetch(`${stateUrl}/${ordersKey}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': "application/json"
             }
-            
-            return response.text();
-        }).then((orders) => {
-            res.send(orders);
-        }).catch((error) => {
-            console.log(error);
-            res.status(500).send({message: error});
         });
+        console.log(`"state store response: ${JSON.stringify(response)}`)
+        if (!ordersResp.ok) {
+            return JSON.stringify(response);
+            // throw `Could not get state. Response is ${JSON.stringify(response)}`;
+        }
+        return ordersResp.text();
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({message: error});
+    }
 });
 
 app.post('/neworder', async (req, res) => {
     console.log("in the neworder endpoint)")
     const data = req.body.data;
+    console.log("neworder incoming body:");
+    console.log(data);
     const dataJSON = JSON.parse(req.body.data);
     // stringify goes from an object to a string
     // we had JSON.parse before, and that changes a string
