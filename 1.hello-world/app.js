@@ -17,6 +17,10 @@ const port = 3000;
 
 const ordersKey = "orders";
 
+app.get("/", (req, res) => {
+    res.status(200).send({message: "Hello Twitch!"});
+})
+
 app.get('/orders', async (_req, res) => {
     const stateStoreURL = `${stateUrl}/${ordersKey}`;
     console.log(`state store URL: ${stateStoreURL}`);
